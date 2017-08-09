@@ -7,5 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Douglas José Ramalho Araujo",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "commander": "^2.11.0",
+    "prompt": "^1.0.0"
+  }
 }

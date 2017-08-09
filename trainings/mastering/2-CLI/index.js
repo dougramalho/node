@@ -1,29 +1,50 @@
-var util = require("util");
-var greetings = ["hi", "hey", "hallo", "nice to meet you"];
+var program = require("commander");
+var prompt = require("prompt");
 
-//process is a global object
-process.argv.slice(2).forEach(function(val, index, array){
-    if(greetings.indexOf(val) > -1){
-        console.log("Hi, I am CLI, what can I do for you?");
-    }else if(val.indexOf("help") > -1){
-        console.log("You can type \n hi, to great me \n ...");
-    }else if(val.indexOf("input" > -1)){
-        process.stdin.resume();
-        process.stdin.setEncoding("utf8");
+var tree = {};
 
-        process.stdin.on("data", function(text){
-            console.log("received data:", util.inspect(text));
-            if(text === "quit\r\n"){
-                done();
-            }
-        });
+program
+.version("0.0.1")
+.option("-i, --info", "Add more info")
+.option("-U, --upper", "Transform all the output in uppercase");
 
-        function done(){
-            console.log("Now that process.stdin is paused, there is nothing more to do.");
-            process.exit();
+program
+    .command("hi")
+    .description("this is the greeting command")
+    .action(function(options){
+        print("Hi, welcome to our programme, Iam CIL! Nice to mmet you.")
+    });
+program
+    .command("input [save]") //save is a variable, that can be used after
+    .description("run a questionary to find the animal you have in your head!")
+    .option("-q, --question [mode]", "The question angelica needs to start with, overrides the default question.")
+    .action(function(save, options){ //this is the same variable of the command declaration in the step before
+        var question = options.question || "Is your animal a fish?";
+        save = save || "memory";
+        if(save=="memory"){
+            print("We will start with saving in memory! \n");
+            print(question);
+
+            prompt.start();
+            prompt.get(["answer"], function(err, result){
+                print("result : " + result.answer);
+                if(result.answer == "yes"){
+                    console.log("great we made it :)");
+                }else if(result.answer == "no"){
+                    console.log("What was the question that we were supposed to ask instead");
+                    prompt.get(["question"], function(err, result){
+                        tree.no = result;
+                    });
+                }
+            });
+        }else{
+            print("can not save it to " + save);
         }
-    }
-    else{
-        console.log("I cn't help you, should I provide you with options?");
-    }
-});
+    });
+
+function print(s){
+    if(program.upper) s = s.toUpperCase();
+    console.log(s);
+}
+
+program.parse(process.argv);
