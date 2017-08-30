@@ -1,5 +1,7 @@
+#! C:\Users\douglas.araujo\nodejs node
 var program = require("commander");
 var prompt = require("prompt");
+var colors =  require("colors");
 
 var tree = {};
 
